@@ -35,14 +35,14 @@ class HomeController extends Controller
     public function index(Request $request)
     {        
         if (Auth::User()) {
-          $profile = NewPhoto::where([['user_id', Auth::User()->id], ['category', 'Professisonal']])->first();
-          $profileImage='';
+          $profile      = NewPhoto::where([['user_id', Auth::User()->id], ['category', 'Professisonal']])->first();
+          $profileImage ='';
           if($profile)
             $profileImage = $profile->picture;
 
-          $pro_gallery = NewPhoto::where([['user_id', Auth::User()->id], ['category', '!=', 'Professisonal']])->latest()->get();
-          $main_categories = MainCategories::all();
-          $data = ProPackage::where('user_id', Auth::user()->id)->latest()->paginate(15);
+          $pro_gallery      = NewPhoto::where([['user_id', Auth::User()->id], ['category', '!=', 'Professisonal']])->latest()->get();
+          $main_categories  = MainCategories::all();
+          $data             = ProPackage::where('user_id', Auth::user()->id)->latest()->paginate(15);
           
           if (Auth::user()->account_type != 'professional') {
             $cat_id = $request->input('catid');
@@ -77,10 +77,11 @@ class HomeController extends Controller
             ]);
           } else {
             return view('home')->with([
-              'profile' => $profileImage,
-              'pro_gallery' => $pro_gallery,
-              'packages' => $data,
+              'profile'         => $profileImage,
+              'pro_gallery'     => $pro_gallery,
+              'packages'        => $data,
               'main_categories' => $main_categories,
+              'user_categories' => $data,
             ]);
           }    
         } else{
@@ -116,7 +117,8 @@ class HomeController extends Controller
             'new_offers'           => $new_offers,
             'accept_offers'        => $accept_offers,
             'hired_jobs'           => $hired_jobs,
-            'main_categories'      => $main_categories,            
+            'main_categories'      => $main_categories,     
+            'user_categories'      => $check_packages,       
             'check_offers'         => $check_offers,
             'check_accept_offers'  => $check_accept_offers,
             'completed_jobs'       => $completed_jobs,

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Professional;
 use App\User;
+use App\ProPackage;
 use Auth;
 use Illuminate\Http\Request;
 
@@ -17,9 +18,10 @@ class ProfessionalController extends Controller
     public function index()
     {
         if (Auth::User()){
-          $user = User::find(Auth::user()->id);
+          $user             = User::find(Auth::user()->id);
+          $user_categories  = ProPackage::where('user_id', Auth::user()->id)->latest()->paginate(10);
           if($user){
-            return view("professional.settings.settings")->withUser($user);
+            return view("professional.settings.settings")->with(['user' => $user,'user_categories' => $user_categories]);
           }else{
             return redirect()->back();
           }

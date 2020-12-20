@@ -138,6 +138,10 @@
             success: function (data) {
                 if (data.status) {
                     $.notify(data.message, "success");
+                    $("#uploadPhoto").modal('hide');
+                    $.each($.parseJSON(data.photo_link), function(idx, obj) {
+                        $('#masonry_portofolio').append('<li class="card-container col-lg-4 col-md-3 col-sm-6 col-6 cards_ ' + data.category + '" data-responsive="http://127.0.0.1:8000/storage/photos/' + obj + ' 375, http://127.0.0.1:8000/storage/photos/' + obj + ' 480, http://127.0.0.1:8000/storage/photos/' + obj + ' 800" data-src="http://127.0.0.1:8000/storage/photos/' + obj + '" data-sub-html=""><div class="dez-media dez-img-overlay1 dez-img-effect"><a href=""><img class="img-responsive" src="http://127.0.0.1:8000/storage/photos/' + obj + '"></a></div><img onclick="javascript:portfolioDelete(this, ' + data.gallery_id + ')" src="http://127.0.0.1:8000/storage/close.png" style="position: absolute; top: 4px; right: 5px;width:50px; z-index:10;"></li>');
+                    });                    
                 } else {
                     $.notify(data.error, "error")
                 }

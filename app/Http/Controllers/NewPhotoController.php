@@ -34,7 +34,13 @@ class NewPhotoController extends Controller
         $photo->category = $request->category;
         $photo->user_id  = Auth::User()->id;
         $photo->save();
-      return ['status' => true, 'message' => 'Image has been added in your account successfuly'];
+        
+      return ['status'     => true, 
+              'message'    => 'Image has been added in your account successfuly',
+              'photo_link' => json_encode($data),
+              'category'   => $request->category,
+              'gallery_id' => $photo->id,
+             ];
     } else{
         return ['status' => true, 'message' => 'Something went wrong with our server, try again later.'];
     }

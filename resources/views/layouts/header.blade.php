@@ -122,8 +122,9 @@
                 <div class="form-group">
                   <label for="category">Select a package.</label>
                   <select class="form-control" name="category">
-                    <option value="pet">Pet</option>
-                    <option value="birthday">Birthday</option>
+                  @foreach($user_categories as $category)
+                    <option value="{{ $category->category }}">{{ $category->category }}</option>
+                  @endforeach
                   </select>
                 </div>
             </div>

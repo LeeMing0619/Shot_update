@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\BusinessScheduleRequest;
 use App\ProSchedule;
 use App\User;
+use App\ProPackage;
 use Auth;
 
 class ProScheduleController extends Controller
@@ -20,15 +21,17 @@ class ProScheduleController extends Controller
       if (Auth::User()){
         if(Auth::user()->account_type == 'professional')
         {
-            $schedule_cont = ProSchedule::where('user_id', Auth::user()->id)->first();
+            $schedule_cont    = ProSchedule::where('user_id', Auth::user()->id)->first();
+            $user_categories  = ProPackage::where('user_id', Auth::user()->id)->latest()->paginate(10);
             if($schedule_cont == null)
             {
-                return view('professional.settings.schedule');
+                return view('professional.settings.schedule')->with(['user_categories' => $user_categories]);
             }else{
                 $payments = explode(",", $schedule_cont->days);
                 return view('professional.settings.save-schedule')->with([
                   'values' => $schedule_cont,
                   'payments' => $payments,
+                  'user_categories' => $user_categories,
                 ]);
             }
 
