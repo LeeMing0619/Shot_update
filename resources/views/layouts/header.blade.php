@@ -117,7 +117,7 @@
             @method('GET')
             <div class="col-md-12">
                 <div class="form-group">
-                  <input type="file" name="picture[]" class="dropify" data-height="250" data-allowed-file-extensions="jpg jpeg png gig" multiple/>
+                  <input type="file" name="picture[]" class="dropify" data-show-remove="false" data-height="250" data-allowed-file-extensions="jpg jpeg png gig" multiple/>
                 </div>
                 <div class="form-group">
                   <label for="category">Select a package.</label>

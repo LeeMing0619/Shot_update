@@ -110,8 +110,6 @@
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCDgCqSP7r9bnQ_oxU4uVk_eSZYSLcoGkc&libraries=places&callback=initAutocomplete" async defer></script>
 <script src="{{ asset('js/autocompleteaddress.js')}}"></script>
 <script type="text/javascript" src="{{asset('plugins\dropify\dist\js\dropify.min.js')}}"></script>
-<script type="text/javascript" src="{{ asset('js/notify.min.js')}}"></script>
-<script type="text/javascript" src="{{ asset('js/notify.js')}}"></script>
 <script>
     $('.dropify').dropify();
     $(function () {
@@ -160,6 +158,7 @@
 <script type="text/javascript">
   $(document).ready(function() {
     $('#masonry').lightGallery();
+    $('#masonry_portofolio').lightGallery();
     $('.timepicker-12-hr').wickedpicker();
     const $valueSpan = $('.valueSpan2');
     const $value = $('#customRange11');
