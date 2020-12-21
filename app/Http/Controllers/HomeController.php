@@ -55,13 +55,13 @@ class HomeController extends Controller
             }
             else
               $myJobs        = NewBooking::where([['user_id', Auth::User()->id], ['done_hiring', 0]])->orderBy('created_at', 'desc')->paginate(10);     
-
            
-            $acceptedJOBS    = AcceptedJob::where([['client_id', Auth::User()->id], ['job_id', $jobID]])->get();
-            $total_accepted  = AcceptedJob::where('client_id', Auth::User()->id)->get();
-            $selectedJob     = NewBooking::where('id', $jobID)->get();            
-            $openJobs        = AcceptedJob::where([['client_id', Auth::User()->id], ['hire_status', 1]])->paginate(10);
-            $closedJobs      = AcceptedJob::where([['client_id', Auth::User()->id], ['hire_status', 2]])->paginate(10);
+            $acceptedJOBS      = AcceptedJob::where([['client_id', Auth::User()->id], ['job_id', $jobID]])->get();
+            $total_accepted    = AcceptedJob::where([['client_id', Auth::User()->id], ['hire_status', 0]])->get();
+            $selectedJob       = NewBooking::where('id', $jobID)->get();            
+            $openJobs          = AcceptedJob::where([['client_id', Auth::User()->id], ['hire_status', 1]])->paginate(10);
+            $closedJobs        = AcceptedJob::where([['client_id', Auth::User()->id], ['hire_status', 2]])->paginate(10);
+            $closedJobs_count  = AcceptedJob::where([['client_id', Auth::User()->id], ['hire_status', 2]])->get();
 
             return view('home')->with([
               'profile'             => $profileImage,
@@ -74,6 +74,7 @@ class HomeController extends Controller
               'openJobs'            => $openJobs,
               'closedJobs'          => $closedJobs,
               'total_accepted'      => $total_accepted,
+              'closedJobs_count'    => $closedJobs_count,
             ]);
           } else {
             return view('home')->with([
@@ -155,6 +156,31 @@ class HomeController extends Controller
             return ['status'    => true,
                     'message'   => 2,
                     'new_count' => $hired_jobs - $request->hired_count,                    
+                   ];
+          else
+            return ['status'  => false,];
+        }
+      } else{
+        return redirect('/');
+      }
+    }
+
+    public function checkBooking(Request $request) {
+      if (Auth::User()){
+        if(Auth::user()->account_type != 'professional')
+        {          
+          $send_offer  = AcceptedJob::where([['client_id', Auth::user()->id], ['hire_status', '0']])->get()->count();
+          $closed_jobs = AcceptedJob::where([['client_id', Auth::user()->id], ['hire_status', '2']])->get()->count();
+          
+          if ($send_offer > $request->receive_count)
+            return ['status'    => true,
+                    'message'   => 1,
+                    'new_count' => $send_offer - $request->receive_count,                    
+                   ];            
+          else if ($closed_jobs > $request->closed_cnt)
+            return ['status'    => true,
+                    'message'   => 2,
+                    'new_count' => $closed_jobs - $request->closed_cnt,                    
                    ];
           else
             return ['status'  => false,];

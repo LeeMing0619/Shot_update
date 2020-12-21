@@ -24,6 +24,7 @@ Route::post('/home/deleteBooking', 'HomeController@deleteBooking')->name('delete
 Route::post('/home/editBooking', 'HomeController@editBooking')->name('editBooking');
 Route::post('/home/checkOffers', 'HomeController@checkOffers')->name('checkOffers');
 Route::post('/home/changeBooking', 'HomeController@changeBooking')->name('changeBooking');
+Route::post('/home/checkBooking', 'HomeController@checkBooking')->name('checkBooking');
 
 Route::get('/dashboard', 'HomeController@proDash')->name('dashboard');
 Route::post('/dashboard/sendoffer', 'HomeController@sendOffer')->name('sendoffer');

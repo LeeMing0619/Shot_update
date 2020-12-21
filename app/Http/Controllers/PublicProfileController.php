@@ -14,10 +14,13 @@ class PublicProfileController extends Controller
     }
     public function viewPackage($id)
     {
-      $decode_id = unserialize($id);
-      $data = ProPackage::where('id', $decode_id)->get();
+      $decode_id       = unserialize($id);
+      $data            = ProPackage::where('id', $decode_id)->get();
+      $user_categories = ProPackage::where('user_id', Auth::user()->id)->latest()->paginate(15);
+      
       return view('public-profile.view-package')->with([
-        'packages' => $data,
+        'packages'        => $data,
+        'user_categories' => $user_categories,
       ]);
     }
 }

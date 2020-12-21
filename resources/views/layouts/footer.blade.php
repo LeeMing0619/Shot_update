@@ -199,8 +199,9 @@
                 id = $('#aObject').val();
                 $('#'+id).text('Accepted');
                 $('#'+id).removeAttr('onclick');                
-                $('.pending').text(num_pending + 1);
                 num_pending++;
+                $('.pending').text(num_pending);
+                
                 $.notify("Your booking offer was created successfuly!", {
                     className:'success',
                     clickToHide: true,

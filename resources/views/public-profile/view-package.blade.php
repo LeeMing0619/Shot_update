@@ -25,7 +25,7 @@
         <div class="form-row list_pck">
           <div class="form-group col-md-4">
             <h3 style="color: #555; font-weight: 600;">{{$package->currency}}{{$package->price}}/hr</h3>
-            <a href="javascript:void(0);" data-toggle="modal" data-target="#requestService"  class="btn btn-dark" style="padding: 15px 20px; font-size: 17px; margin: 10px 0 0 0;">Request Service</a>
+            <!-- <a href="javascript:void(0);" data-toggle="modal" data-target="#requestService"  class="btn btn-dark" style="padding: 15px 20px; font-size: 17px; margin: 10px 0 0 0;">Request Service</a> -->
           </div>
         </div>
       </div>

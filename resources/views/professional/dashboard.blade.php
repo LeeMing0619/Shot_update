@@ -46,7 +46,7 @@
 @section('scripts')
 <script type="text/javascript">
   $(document).ready(function() {
-    window.setInterval(setTimerFunc, 1000 * 15);
+    window.setInterval(setTimerFunc, 1000 * 10);
     console.log('start____________');
     
 		function setTimerFunc() { 

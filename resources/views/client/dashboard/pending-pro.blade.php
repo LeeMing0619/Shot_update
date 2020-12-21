@@ -241,6 +241,8 @@ $(function() {
   
   });
   
+  var num_pending_client = 0;
+
   function stripeHandleResponse(status, response) { 
         if (response.error) {
             $('.error')
@@ -248,7 +250,14 @@ $(function() {
                 .find('.alert')
                 .text(response.error.message);
         } else { 
-			alert("Payment Success");
+            $.notify("Payment success!", {
+                    className:'success',
+                    clickToHide: true,
+                    autoHide: true,
+                    globalPosition: 'top right'
+                });
+            num_pending_client++;
+            $('.opencontracts').text(num_pending_client);
             var token = response['id'];
             $form.find('input[type=text]').empty();
             $form.append("<input type='hidden' name='stripeToken' value='" + token + "'/>");
