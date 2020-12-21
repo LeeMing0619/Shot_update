@@ -45,6 +45,7 @@ Route::post('change-image/uploadpic', 'ImageProfileController@profileUploadFromB
 Route::get('new-photo/', 'NewPhotoController@index')->name('upload-photo');
 Route::get('new-photo/store', 'NewPhotoController@StorePhoto')->name('store-photo');
 
+Route::get('send', 'NewBookingController@sendNotification');
 Route::resource('/new-booking', 'NewBookingController');
 
 Route::get('/feedback/{id}', 'FeedbackController@index')->name('feedback');

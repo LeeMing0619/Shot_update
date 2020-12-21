@@ -75,17 +75,25 @@ img {
           </div>
         </div>
 			</div>
-		</div>
+    </div>      
+    @if(Auth::user()->phone_number == 'none' || Auth::user()->moto == 'none' || Auth::user()->business_adress == 'none' || \App\ProPackage::where('user_id', Auth::user()->id)->get()->count() == 0 || \App\ProSchedule::where([['user_id', Auth::user()->id],['days', '!=','']])->get()->count() == 0)
 		<div class="col-lg-4 col-md-5">
 			<div class="pending-info text-white p-a25">
 				<h5>Pending Action</h5>
 				<ul class="list-check secondry">
-          <li><a href="" style="color: #fff; text-decoration: none;">Business Info Missing</a></li>
-          <li><a href="" style="color: #fff; text-decoration: none;">Business Open Days Missing</a></li>
-					<li><a href="" style="color: #fff; text-decoration: none;">Business Packages Missing</a></li>
+          @if(Auth::user()->phone_number == 'none' || Auth::user()->moto == 'none' || Auth::user()->business_adress == 'none')
+          <li><a href="{{ route('settings.index') }}" style="color: #fff; text-decoration: none;">Business Info Missing</a></li>
+          @endif          
+          @if(\App\ProPackage::where('user_id', Auth::user()->id)->get()->count() == 0)
+          <li><a href="{{ route('package.index') }}" style="color: #fff; text-decoration: none;">Business Packages Missing</a></li>
+          @endif         
+          @if(\App\ProSchedule::where([['user_id', Auth::user()->id],['days', '!=','']])->get()->count() == 0)
+          <li><a href="{{ route('schedule.index') }}" style="color: #fff; text-decoration: none;">Business Open Days Missing</a></li>
+          @endif
 				</ul>
 			</div>
-		</div>
+    </div>
+    @endif
 	</div>
 </div>
 </div>

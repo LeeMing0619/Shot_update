@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Notification;
 use App\User;
 use Auth;
 use App\NewBooking;
 use App\MainCategories;
 use Carbon\Carbon;
 use App\Http\Requests\NewBookingRequest;
+use App\Notifications\SendEmailNotification;
 
 class NewBookingController extends Controller
 {
@@ -72,6 +74,21 @@ class NewBookingController extends Controller
       ]);
 
       NewBooking::create($post);
+      $users = User::where('account_type', '!=', 'client')->get();
+      foreach ($users as $user) {
+        if (ProPackage::where([['user_id', $user->id], ['category', $request->looking_to_shoot]])->get()->count() > 0) {
+          $details = [
+            'greeting'   => 'Hi'.$user->first_name,
+            'body'       => 'Posted new Job from SeempleShots.com',
+            'thanks'     => 'Thanks you for using SeempleShots.com',
+            'actionText' => 'Please check it',
+            'actionURL'  => url('/'),
+            'order_id'   => 101,
+          ];
+          Notification::send($user, new SendEmailNotification($details));
+        }
+          
+      }
 
       return back();
     }

@@ -53,8 +53,9 @@ class ProScheduleController extends Controller
       if (Auth::User()){
         if(Auth::user()->account_type == 'professional')
         {
-          $days = implode(',', $request->days);
-          $payment_method = implode(',', $request->payment_method);
+          //dd($request->days);exit();
+          $days = $request->days == null ? "" : implode(',', $request->days);
+          $payment_method = $request->payment_method == null ? "" : implode(',', $request->payment_method);
           ProSchedule::create([
             'user_id' => Auth::user()->id,
             'payment_method' => $payment_method,
@@ -114,8 +115,8 @@ class ProScheduleController extends Controller
       if (Auth::User()){
         if(Auth::user()->account_type == 'professional')
         {
-          $days = implode(',', $request->days);
-          $payment_method = implode(',', $request->payment_method);
+          $days = $request->days == null ? "" : implode(',', $request->days);
+          $payment_method = $request->payment_method == null ? "" : implode(',', $request->payment_method);
 
           ProSchedule::where('user_id', Auth::User()->id)->update([
               'payment_method' => $payment_method,
