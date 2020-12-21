@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\NewPhoto;
 use App\User;
+use App\MainCategories;
 use Auth;
 
 class MainPageController extends Controller
@@ -13,10 +14,12 @@ class MainPageController extends Controller
 
       $gallery = NewPhoto::where('category', '!=', 'Professisonal')->latest()->paginate(15);
       foreach($gallery as $value)
-      $user = User::all();
+      $user            = User::all();
+      $main_categories = MainCategories::all();
       // $user = User::where()->first();
       return view("welcome")->with([
-        "gallery" => $gallery,
+        "gallery"         => $gallery,
+        "user_categories" => $main_categories,
       ]);
     }
 }

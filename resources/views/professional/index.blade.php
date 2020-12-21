@@ -58,6 +58,9 @@ img {
               <h2 class="m-b0 pr_name" style="color: #222;">{{ Auth::user()->first_name }} {{ Auth::user()->last_name }}
                 <a class="m-l15 font-16 text-white" data-toggle="modal" data-target="#profilename" href="#"><i class="fa fa-pencil"></i></a>
               </h2>
+              @if(\App\Feedback::where('pro_id',Auth::user()->id)->first())
+                <p><i class="fa fa-star"></i> {{(\App\Feedback::where('pro_id',Auth::user()->id)->sum('skills') / 2 + \App\Feedback::where('pro_id',Auth::user()->id)->sum('quality') / 2) / \App\Feedback::where('pro_id',Auth::user()->id)->count() }}</p>
+              @endif
               <p class="m-b15" style="color: #222;margin: 15px 0;">
                 {{ Auth::user()->moto }}
               </p>

@@ -122,9 +122,14 @@
                 <div class="form-group">
                   <label for="category">Select a package.</label>
                   <select class="form-control" name="category">
-                  @foreach($user_categories as $category)
-                    <option value="{{ $category->category }}">{{ $category->category }}</option>
-                  @endforeach
+                  @guest
+                  @else
+                    @if(Auth::user()->account_type == "professional")
+                      @foreach($user_categories as $category)
+                        <option value="{{ $category->category }}">{{ $category->category }}</option>
+                      @endforeach
+                    @endif
+                  @endguest
                   </select>
                 </div>
             </div>
