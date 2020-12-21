@@ -103,10 +103,12 @@ class ProPackageController extends Controller
       if (Auth::User()){
         if(Auth::user()->account_type == 'professional')
         {
-          $all_packages = ProPackage::where('user_id', Auth::user()->id)->where('id', '!=', $package->id)->latest()->get();
+          $user_categories = ProPackage::where('user_id', Auth::user()->id)->latest()->paginate(10);
+          $all_packages    = ProPackage::where('user_id', Auth::user()->id)->where('id', '!=', $package->id)->latest()->get();
           return view("professional.settings.edit")->with([
-            'package'=>$package,
-            'all_package'=> $all_packages,
+            'package'         =>$package,
+            'all_package'     => $all_packages,
+            'user_categories' => $user_categories,
           ]);
         }
       }

@@ -30,8 +30,7 @@
 				@else
 					<a onclick="javascript:clickModal(this)" id="{{$offers->id}}" data-id="{{$offers->id}}" data-client="{{$offers->user_id}}" data-email="{{\App\User::where('id',$offers->user_id)->first()->email}}" style="color:#fff" class="site-button add-btn button-sm">Accept Offer</a>
 				@endif
-				</div>
-				<input type="hidden" id="ch_cnt" value="{{$check_offers->count()}}">
+				</div>				
 			</li>
 			@empty
 				<h3>There's nothing yet in your area...</h3>
@@ -117,42 +116,15 @@
 	</div>
 </div>
 
-<script src="{{ asset('js/jquery.min.js')}}"></script>
 <script type="text/javascript">
 	
 	function clickModal(index) {		
 		$('#aObject').val($(index).data('id'));
 		$('#client').val($(index).data('client'));
 		$('#email').val($(index).data('email'));
-		$('#modal').modal('show');		
+		$('#modal').modal('show');
+		$('#duration_').val("");
+		$('#price_').val("");
 	}
-
-	$(document).ready(function() {
-	setTimerFunc();
-    function setTimerFunc() { 
-		
-		$.ajax({              
-			type: "POST",
-			url: "{{ route('checkOffers') }}",
-			data: {
-			'_token'       : $('#token').val(),			
-			'job_count'    : $('#ch_cnt').val(),
-			},
-			success: function(data){
-                if (data != "False") {
-					$('.badge').text(data);
-					$.notify("You got the New Jobs. Please check.....", {
-						className:'info',
-						clickToHide: true,
-						autoHide: true,
-						globalPosition: 'bottom right'
-					});
-				}
-
-				window.setInterval(setTimerFunc, 1000 * 40);
-			}
-		});
-	}
-});
 	
 </script>

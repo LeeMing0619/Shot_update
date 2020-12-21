@@ -111,12 +111,14 @@ class HomeController extends Controller
           $accept_offers          = AcceptedJob::where([['pro_id', Auth::user()->id],['hire_status', '0']])->paginate(10);
           $check_accept_offers    = AcceptedJob::where('pro_id', Auth::user()->id)->get();
           $hired_jobs             = AcceptedJob::where([['pro_id', Auth::user()->id],['hire_status', '1']])->paginate(10);
+          $hired_jobs_count       = AcceptedJob::where([['pro_id', Auth::user()->id],['hire_status', '1']])->get();
           $completed_jobs         = NewHire::where([['pro_id', Auth::user()->id],['hire_status', '2']])->paginate(10);
           // ->orWhere($orThose)
           return view('professional.dashboard')->with([
             'new_offers'           => $new_offers,
             'accept_offers'        => $accept_offers,
             'hired_jobs'           => $hired_jobs,
+            'hired_jobs_count'     => $hired_jobs_count,
             'main_categories'      => $main_categories,     
             'user_categories'      => $check_packages,       
             'check_offers'         => $check_offers,
@@ -135,18 +137,27 @@ class HomeController extends Controller
       if (Auth::User()){
         if(Auth::user()->account_type == 'professional')
         {
-          $matchThese             = ["locality" => Auth::user()->locality, "area" => Auth::user()->area];  
-          $check_packages         = ProPackage::where('user_id', Auth::user()->id)->get();    
-          $check_offers           = NewBooking::where($matchThese)->where(function ($q) use ($check_packages) {
+          $matchThese       = ["locality" => Auth::user()->locality, "area" => Auth::user()->area];  
+          $check_packages   = ProPackage::where('user_id', Auth::user()->id)->get();    
+          $check_offers     = NewBooking::where($matchThese)->where(function ($q) use ($check_packages) {
                                                   foreach ($check_packages as $package) {
                                                     $q->orWhere('looking_to_shoot',  $package->category);
                                                   }
                                                 })->get()->count();        
+          $hired_jobs       = AcceptedJob::where([['pro_id', Auth::user()->id],['hire_status', '1']])->get()->count();
 
           if ($check_offers > $request->job_count)
-            echo $check_offers - $request->job_count;
+            return ['status'    => true,
+                    'message'   => 1,
+                    'new_count' => $check_offers - $request->job_count,                    
+                   ];            
+          else if ($hired_jobs > $request->hired_count)
+            return ['status'    => true,
+                    'message'   => 2,
+                    'new_count' => $hired_jobs - $request->hired_count,                    
+                   ];
           else
-            echo "False";
+            return ['status'  => false,];
         }
       } else{
         return redirect('/');

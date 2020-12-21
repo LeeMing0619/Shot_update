@@ -173,8 +173,11 @@
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
     });
-    $("#sendoffer").click(function(){
-    
+
+    var num_pending = 0;
+
+    $("#sendoffer").click(function() {    
+        
         if ($('#duration_').val() == '' || $('#price_').val() == '') {
             $.notify("Please make sure that all fields are filled.", {
                 className:'info',
@@ -195,7 +198,9 @@
                 $('#modal').modal('hide');
                 id = $('#aObject').val();
                 $('#'+id).text('Accepted');
-                $('#'+id).removeAttr('onclick');
+                $('#'+id).removeAttr('onclick');                
+                $('.pending').text(num_pending + 1);
+                num_pending++;
                 $.notify("Your booking offer was created successfuly!", {
                     className:'success',
                     clickToHide: true,
