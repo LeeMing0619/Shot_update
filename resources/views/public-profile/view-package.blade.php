@@ -48,7 +48,9 @@
         <h3 style="color: #555; font-weight: 700;">What clients say about this artist:</h3>
       </div>
       <div class="form-group col-md-7" style="position: relative;">
-        Review
+        @foreach($feedbacks as $feedback)
+          <p>{{ $feedback->description }} </p>
+        @endforeach
       </div>
       <div class="form-group col-md-5">
         <h3 style="color: #555; font-weight: 700;">Other services by {{\App\User::where('id', $package->user_id)->first()->first_name}}</h3>

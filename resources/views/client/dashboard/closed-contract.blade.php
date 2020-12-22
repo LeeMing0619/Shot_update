@@ -19,7 +19,15 @@
 					<h6>
 						<a href="javascript:void(0);">{{\App\User::where('id',$closeJob->pro_id)->first()->first_name}} {{\App\User::where('id',$closeJob->pro_id)->first()->last_name}}</a>
 						@if(\App\Feedback::where('job_id',$closeJob->job_id)->first())
-							<p><i class="fa fa-star"></i>{{(\App\Feedback::where('job_id',$closeJob->job_id)->first()->skills + \App\Feedback::where('job_id',$closeJob->job_id)->first()->quality) / 2 }}</p>
+						<p>@for($i=0; $i<5; $i++)
+							@if ($i < (\App\Feedback::where('job_id',$closeJob->job_id)->first()->skills + \App\Feedback::where('job_id',$closeJob->job_id)->first()->quality) / 2)
+								<i class="fa fa-star"></i> 
+							@else
+								<i class="fa fa-star-o"></i>
+								@endif
+							@endfor  
+						{{(\App\Feedback::where('job_id',$closeJob->job_id)->first()->skills + \App\Feedback::where('job_id',$closeJob->job_id)->first()->quality) / 2 }}
+						
 						@endif
 					</h6>
 					<ul>
