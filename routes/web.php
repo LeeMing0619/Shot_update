@@ -30,6 +30,7 @@ Route::get('/dashboard', 'HomeController@proDash')->name('dashboard');
 Route::post('/dashboard/sendoffer', 'HomeController@sendOffer')->name('sendoffer');
 Route::post('/dashboard/sendofferdel', 'HomeController@sendofferdel')->name('sendofferdel');
 Route::post('/dashboard/send_complete', 'HomeController@send_complete')->name('send_complete');
+Route::post('/dashboard/requestfeedback', 'HomeController@requestfeedback')->name('requestfeedback');
 
 Route::get('/client-register', 'HomeController@client_register')->name('client-register');
 Route::get('/pro-register', 'HomeController@pro_register')->name('pro-register');

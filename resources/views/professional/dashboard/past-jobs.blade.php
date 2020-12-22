@@ -29,7 +29,7 @@
 					</h5>
 				</div>
 				<div class="job-links action-bx">
-					<a href="" class="site-button add-btn button-sm">Request Feedback</a>
+					<a href="javascript:void(0)" onclick="javascript:requestFeedBack('{{\App\User::where('id',$offers->user_id)->first()->first_name}}', '{{\App\User::where('id',$offers->user_id)->first()->email}}')" class="site-button add-btn button-sm">Request Feedback</a>
 				</div>
 				<!-- <div class="job-links action-bx">
 					<a><i class="fa fa-comment" aria-hidden="true"></i> You have been rated 4.0</a>
@@ -114,6 +114,22 @@ function viewDetails(first_name, last_name, phone_number, address)
 	$('#last_name').val(last_name);
 	$('#phone_number').val(phone_number);
 	$('#event_address').html('<i class="fa fa-map-marker" aria-hidden="true"></i> ' + address);
+}
+
+function requestFeedBack(first_name, email) {
+	$.ajax({
+            
+		type: "POST",
+		//dataType: "json",
+		url: "{{ route('requestfeedback') }}",
+		data: {'_token': $('meta[name="_token"]').attr('content'), 'name': first_name, 'email': email},
+		success: function(data){
+			alert("success");
+		},
+		error: function(data){
+			console.log(data);
+		}
+	});
 }
 
 </script>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\FeedbackRequest;
+use Mail;
 use App\User;
 use App\NewHire;
 use App\Feedback;
@@ -48,6 +49,16 @@ class FeedbackController extends Controller
         
             Feedback::create($post);
         
+            $details = [
+                'subject'  => 'Hello',
+                'email'    => $job->pro_email,
+                'content'  => 'You just received feedback from SeempleShots.com. Thanks for using SeempleShots.com'
+              ];
+            Mail::send('mail', $details, function($message) use ($details) {
+                $message->to($details['email'], '')->subject('FeedBack');
+                $message->from('vendorforest1@gmail.com', 'SeempleShot');
+            });
+            
             return redirect('/home?tab=closed_contract');
         } else {
             return redirect('/');

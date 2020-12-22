@@ -3,14 +3,15 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Notification;
+use Mail;
+use App\Mail\SendMail;
 use App\User;
 use Auth;
 use App\NewBooking;
 use App\MainCategories;
+use App\ProPackage;
 use Carbon\Carbon;
 use App\Http\Requests\NewBookingRequest;
-use App\Notifications\SendEmailNotification;
 
 class NewBookingController extends Controller
 {
@@ -54,22 +55,22 @@ class NewBookingController extends Controller
       // ]);
 
       $post = ([
-        'user_id' => Auth::user()->id,
-        "pro_type" => $request->pro_type,
+        'user_id'          => Auth::user()->id,
+        "pro_type"         => $request->pro_type,
         "looking_to_shoot" => $request->looking_to_shoot,
-        "event_address" => $request->event_address,
-        "street_number" => $request->street_number,
-        "route" => $request->route,
-        "locality" => $request->locality,
-        "area" => $request->area,
-        "postal_code" => $request->postal_code,
-        "country" => $request->country,
-        "address_details" => $request->address_details,
-        "duration_" => $request->duration_,
-        "hours_" => $request->hours_,
-        "event_date" => $request->event_date,
-        "start_time" => $request->start_time,
-        "time_zone" => $request->time_zone
+        "event_address"    => $request->event_address,
+        "street_number"    => $request->street_number,
+        "route"            => $request->route,
+        "locality"         => $request->locality,
+        "area"             => $request->area,
+        "postal_code"      => $request->postal_code,
+        "country"          => $request->country,
+        "address_details"  => $request->address_details,
+        "duration_"        => $request->duration_,
+        "hours_"           => $request->hours_,
+        "event_date"       => $request->event_date,
+        "start_time"       => $request->start_time,
+        "time_zone"        => $request->time_zone
         //"allow_employee" => $request->allow_employee,
       ]);
 
@@ -78,16 +79,15 @@ class NewBookingController extends Controller
       foreach ($users as $user) {
         if (ProPackage::where([['user_id', $user->id], ['category', $request->looking_to_shoot]])->get()->count() > 0) {
           $details = [
-            'greeting'   => 'Hi'.$user->first_name,
-            'body'       => 'Posted new Job from SeempleShots.com',
-            'thanks'     => 'Thanks you for using SeempleShots.com',
-            'actionText' => 'Please check it',
-            'actionURL'  => url('/'),
-            'order_id'   => 101,
+            'subject'  => 'Hello, '.$user->first_name,
+            'email'    => $user->email,
+            'content'  => 'Posted New Job from SeempleShots.com. Thanks for using SeempleShots.com'
           ];
-          Notification::send($user, new SendEmailNotification($details));
-        }
-          
+          Mail::send('mail', $details, function($message) use ($details) {
+            $message->to($details['email'], '')->subject('New Match');
+            $message->from('vendorforest1@gmail.com', 'SeempleShot');
+          });
+        }          
       }
 
       return back();

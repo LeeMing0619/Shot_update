@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Input;
 use Illuminate\Http\Request;
+use Mail;
 use App\User;
 use App\NewPhoto;
 use App\NewBooking;
@@ -248,6 +249,17 @@ class HomeController extends Controller
             $job_id  = $request->job_id;
             $isExist = NewHire::where([['pro_id', Auth::user()->id], ['job_id', $job_id]])->first();
             if($isExist) {
+
+              $details = [
+                'subject'  => 'Hello',
+                'email'    => $isExist->client_email,
+                'content'  => 'Professional just complete the job. Thanks for using SeempleShots.com'
+              ];
+              Mail::send('mail', $details, function($message) use ($details) {
+                  $message->to($details['email'], '')->subject('Complete Job');
+                  $message->from('vendorforest1@gmail.com', 'SeempleShot');
+              });
+
               AcceptedJob::where([['pro_id', Auth::user()->id], ['job_id', $job_id]])->update(['hire_status'  => 2]);
               return NewHire::where([['pro_id', Auth::user()->id], ['job_id', $job_id]])->update(['hire_status'  => 2]);
             }
@@ -270,6 +282,16 @@ class HomeController extends Controller
           $job_price    = $request->job_price;
           $job_hours    = $request->job_hours;
           
+          $details = [
+            'subject'  => 'Hello',
+            'email'    => $client_email,
+            'content'  => 'You just received proposal from SeempleShots.com. Thanks for using SeempleShots.com'
+          ];
+          Mail::send('mail', $details, function($message) use ($details) {
+              $message->to($details['email'], '')->subject('Offer from Professional');
+              $message->from('vendorforest1@gmail.com', 'SeempleShot');
+          });
+
           return AcceptedJob::create([
             'client_id'     => $client_id,
             'client_email'  => $client_email,
@@ -293,11 +315,34 @@ class HomeController extends Controller
         if(Auth::user()->account_type == 'professional')
         {
           $accepted_id = $request->accepted_id;
+          $email       = AcceptedJob::where('id', $accepted_id)->get()->first()->client_email;
+          $details = [
+            'subject'  => 'Hello',
+            'email'    => $email,
+            'content'  => 'Professional cancel offers from SeempleShots.com. Thanks for using SeempleShots.com'
+          ];
+          Mail::send('mail', $details, function($message) use ($details) {
+              $message->to($details['email'], '')->subject('Cancel Offer');
+              $message->from('vendorforest1@gmail.com', 'SeempleShot');
+          });
+
           return AcceptedJob::where('id', $accepted_id)->delete();          
         }
       } else{
         return redirect('/');
       }
+    }
+
+    public function requestfeedback(Request $request) {
+      $details = [
+        'subject'  => 'Hello, '.$request->name,
+        'email'    => $request->email,
+        'content'  => 'Professional request the feedback from SeempleShots.com. Thanks for using SeempleShots.com'
+      ];
+      Mail::send('mail', $details, function($message) use ($details) {
+          $message->to($details['email'], '')->subject('Request Feedback');
+          $message->from('vendorforest1@gmail.com', 'SeempleShot');
+      });
     }
 
     public function bookings(Request $request) 
@@ -324,6 +369,19 @@ class HomeController extends Controller
                 'hire_status'  => $hire_status,
               ]);
             }
+
+            if ($hire_status == 1) {
+              $details = [
+                'subject'  => 'Hello',
+                'email'    => $pro_email,
+                'content'  => 'Client just hired you from SeempleShots.com. Thanks for using SeempleShots.com'
+              ];
+              Mail::send('mail', $details, function($message) use ($details) {
+                $message->to($details['email'], '')->subject('Hired');
+                $message->from('vendorforest1@gmail.com', 'SeempleShot');
+              });
+            }
+
             NewBooking::where('id', $job_id)->update(['done_hiring'  => $hire_status]);
             return AcceptedJob::where([['pro_id', $pro_id], ['job_id', $job_id]])->update(['hire_status'  => $hire_status]);            
           }
