@@ -109,7 +109,7 @@
 <!-- CONTACT JS  -->
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCDgCqSP7r9bnQ_oxU4uVk_eSZYSLcoGkc&libraries=places&callback=initAutocomplete" async defer></script>
 <script src="{{ asset('js/autocompleteaddress.js')}}"></script>
-<script type="text/javascript" src="{{asset('plugins\dropify\dist\js\dropify.min.js')}}"></script>
+<script type="text/javascript" src="{{asset('plugins\dropify\src\js\dropify.js')}}"></script>
 <script>
     $('.dropify').dropify();
     $(function () {

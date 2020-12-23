@@ -165,34 +165,45 @@ Dropify.prototype.createElements = function()
  */
 Dropify.prototype.readFile = function(input)
 {
-    if (input.files && input.files[0]) {
-        var reader         = new FileReader();
+    if (input.files && input.files[0]) {  
+
         var image          = new Image();
         var file           = input.files[0];
         var srcBase64      = null;
         var _this          = this;
         var eventFileReady = $.Event("dropify.fileReady");
-
+        var reader         = new FileReader();
+        
         this.clearErrors();
         this.showLoader();
         this.setFileInformations(file);
         this.errorsEvent.errors = [];
         this.checkFileSize();
-		this.isFileExtensionAllowed();
+        this.isFileExtensionAllowed();
 
-        if (this.isImage() && this.file.size < this.sizeToByte(this.settings.maxFileSizePreview)) {
-            this.input.on('dropify.fileReady', this.onFileReady);
-            reader.readAsDataURL(file);
-            reader.onload = function(_file) {
-                srcBase64 = _file.target.result;
-                image.src = _file.target.result;
-                image.onload = function() {
-                    _this.setFileDimensions(this.width, this.height);
-                    _this.validateImage();
-                    _this.input.trigger(eventFileReady, [true, srcBase64]);
+        if (this.isImage() && this.file.size < this.sizeToByte(this.settings.maxFileSizePreview)) {     
+            setupReader(0, this);       
+            function setupReader(i, idx) {
+                if (i >= input.files.length) return;
+                console.log(i);
+                idx.input.on('dropify.fileReady', idx.onFileReady);                
+                file = input.files[i];
+                var reader = new FileReader();
+                reader.readAsDataURL(file);                
+                reader.onload = function(_file) {
+                    srcBase64 = _file.target.result;
+                    image.src = _file.target.result;                    
+                    
+                    image.onload = function() {
+                        _this.setFileDimensions(idx.width, idx.height);
+                        _this.validateImage();
+                        _this.input.trigger(eventFileReady, [true, srcBase64]);
+                        setupReader(i + 1, idx);
+                    };
+
                 };
-
-            }.bind(this);
+            }
+                
         } else {
             this.onFileReady(false);
         }
@@ -274,7 +285,7 @@ Dropify.prototype.setPreview = function(previewable, src)
     this.hideLoader();
 
     if (previewable === true) {
-        var imgTag = $('<img />').attr('src', src);
+        var imgTag = $('<img /> <br/>').attr('src', src);
 
         if (this.settings.height) {
             imgTag.css("max-height", this.settings.height);
