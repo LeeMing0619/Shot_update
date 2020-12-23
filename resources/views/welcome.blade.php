@@ -135,23 +135,30 @@
           @forelse($gallery as $galleries)
             @foreach (json_decode($galleries->picture) as $picture)
           <li class="card-container col-lg-4 col-md-3 col-sm-6 col-6 cards_" data-responsive="http://127.0.0.1:8000/storage/photos/{{$picture}} 375, http://127.0.0.1:8000/storage/photos/{{$picture}} 480, http://127.0.0.1:8000/storage/photos/{{$picture}} 800" data-src="http://127.0.0.1:8000/storage/photos/{{$picture}}" data-sub-html="
-          <div style='text-align: left;'>
-                          <div class='testimonial-detail clearfix'>
-                              <strong class='testimonial-name' style='color: #fff; font-size: 14px;'><a href='pro_dashboard.html'>Ledpux Ipanga</a></strong>
-                              <div class='post-tags'>
-                                  <span class='fa fa-star'></span>
-                                  <span class='fa fa-star'></span>
-                                  <span class='fa fa-star'></span>
-                                  <span class='fa fa-star'></span>
-                                  <span class='fa fa-star'></span>
-                                  <span><strong>0.0</strong></span>
-                              </div>
-                              <span class='testimonial-position' style='font-size: 12px;'>Photographer - Malden, MA</span>
-                              <div class=''>
-                                  <a href='send-offer.html' class='site-button add-btn button-sm' style='padding: 5px 10px; font-size: 14px;'>Send Offer</a>
-                              </div>
-                          </div>
-                      </div>
+              <div style='text-align: left;'>
+                <div class='testimonial-detail clearfix'>
+                    <strong class='testimonial-name' style='color: #fff; font-size: 14px;'><a href='/pro-profile/{{ $galleries->user_id }}'>{{ \App\User::where('id', $galleries->user_id)->first()->first_name}} {{ \App\User::where('id', $galleries->user_id)->first()->last_name}}</a></strong>
+                    <div class='post-tags'>
+                    @if(\App\Feedback::where('pro_id', $galleries->user_id)->first())
+                      @for($i=0; $i<5; $i++)
+                        @if ($i < floor((\App\Feedback::where('pro_id',$galleries->user_id)->sum('skills') / 2 + \App\Feedback::where('pro_id',$galleries->user_id)->sum('quality') / 2) / \App\Feedback::where('pro_id',$galleries->user_id)->count()))
+                          <span class='fa fa-star'></span>
+                        @elseif ($i < round((\App\Feedback::where('pro_id',$galleries->user_id)->sum('skills') / 2 + \App\Feedback::where('pro_id',$galleries->user_id)->sum('quality') / 2) / \App\Feedback::where('pro_id',$galleries->user_id)->count()))
+                          <span class='fa fa-star-half-o'></span>
+                        @else
+                          <span class='fa fa-star-o'></span>
+                        @endif
+                      @endfor
+                      <span><strong>{{ (\App\Feedback::where('pro_id',$galleries->user_id)->sum('skills') / 2 + \App\Feedback::where('pro_id',$galleries->user_id)->sum('quality') / 2) / \App\Feedback::where('pro_id',$galleries->user_id)->count() }}</strong></span>
+                    @endif
+                        
+                    </div>
+                    <span class='testimonial-position' style='font-size: 12px;'>{{ \App\User::where('id', $galleries->user_id)->first()->pro_type}} {{ \App\User::where('id', $galleries->user_id)->first()->business_adress}}</span>
+                    <div class=''>
+                        <a href='send-offer.html' class='site-button add-btn button-sm' style='padding: 5px 10px; font-size: 14px;'>Send Offer</a>
+                    </div>
+                </div>
+            </div>
           ">
             <div class="dez-media dez-img-overlay1 dez-img-effect">
               <a href="">
@@ -159,16 +166,21 @@
               </a>
               <div style="text-align: left; position: absolute; bottom: 5px; left: 5px;" class="dss">
                 <div class="testimonial-detail clearfix">
-                  <strong class="testimonial-name pr_name">gerard</strong>
+                  <strong class="testimonial-name pr_name">{{ \App\User::where('id', $galleries->user_id)->first()->first_name}} {{ \App\User::where('id', $galleries->user_id)->first()->last_name}}</strong>
                   <div class="post-tags" style="color: #fff;">
-                    <span class="fa fa-star"></span>
-                    <span class="fa fa-star"></span>
-                    <span class="fa fa-star"></span>
-                    <span class="fa fa-star"></span>
-                    <span class="fa fa-star"></span>
-                    <span><strong>0.0</strong></span>
+                  @if(\App\Feedback::where('pro_id', $galleries->user_id)->first())
+                    @for($i=0; $i<5; $i++)
+                      @if ($i < floor((\App\Feedback::where('pro_id',$galleries->user_id)->sum('skills') / 2 + \App\Feedback::where('pro_id',$galleries->user_id)->sum('quality') / 2) / \App\Feedback::where('pro_id',$galleries->user_id)->count()))
+                        <span class="fa fa-star"></span>
+                      @elseif ($i < round((\App\Feedback::where('pro_id',$galleries->user_id)->sum('skills') / 2 + \App\Feedback::where('pro_id',$galleries->user_id)->sum('quality') / 2) / \App\Feedback::where('pro_id',$galleries->user_id)->count()))
+                        <span class="fa fa-star-half-o"></span>
+                      @else
+                        <span class="fa fa-star-o"></span>
+                      @endif
+                    @endfor
+                  @endif
                   </div>
-                  <span class="testimonial-position pr_name" style="font-size: 12px; color: #fff;">Photo</span>
+                  <span class="testimonial-position pr_name" style="font-size: 12px; color: #fff;">{{ \App\User::where('id', $galleries->user_id)->first()->pro_type}}</span>
                 </div>
               </div>
             </div>

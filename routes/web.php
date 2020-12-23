@@ -32,6 +32,9 @@ Route::post('/dashboard/sendofferdel', 'HomeController@sendofferdel')->name('sen
 Route::post('/dashboard/send_complete', 'HomeController@send_complete')->name('send_complete');
 Route::post('/dashboard/requestfeedback', 'HomeController@requestfeedback')->name('requestfeedback');
 
+Route::get('/pro-profile/{id}', 'HomeController@proProfile')->name('proProfile');
+Route::post('/pro-profile/invitePro', 'HomeController@invitePro')->name('invitePro');
+
 Route::get('/client-register', 'HomeController@client_register')->name('client-register');
 Route::get('/pro-register', 'HomeController@pro_register')->name('pro-register');
 Route::get('/view-package/{id}', 'PublicProfileController@viewPackage')->name('viewpackage');

@@ -60,8 +60,10 @@ img {
               </h2>
               @if(\App\Feedback::where('pro_id',Auth::user()->id)->first())
                 <p>@for($i=0; $i<5; $i++)
-                    @if ($i < (\App\Feedback::where('pro_id',Auth::user()->id)->sum('skills') / 2 + \App\Feedback::where('pro_id',Auth::user()->id)->sum('quality') / 2) / \App\Feedback::where('pro_id',Auth::user()->id)->count())
+                    @if ($i < floor((\App\Feedback::where('pro_id',Auth::user()->id)->sum('skills') / 2 + \App\Feedback::where('pro_id',Auth::user()->id)->sum('quality') / 2) / \App\Feedback::where('pro_id',Auth::user()->id)->count()))
                       <i class="fa fa-star"></i> 
+                    @elseif ($i < round((\App\Feedback::where('pro_id',Auth::user()->id)->sum('skills') / 2 + \App\Feedback::where('pro_id',Auth::user()->id)->sum('quality') / 2) / \App\Feedback::where('pro_id',Auth::user()->id)->count()))
+                      <i class="fa fa-star-half-o"></i> 
                     @else
                       <i class="fa fa-star-o"></i>
                     @endif

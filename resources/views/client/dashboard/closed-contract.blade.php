@@ -20,8 +20,10 @@
 						<a href="javascript:void(0);">{{\App\User::where('id',$closeJob->pro_id)->first()->first_name}} {{\App\User::where('id',$closeJob->pro_id)->first()->last_name}}</a>
 						@if(\App\Feedback::where('job_id',$closeJob->job_id)->first())
 						<p>@for($i=0; $i<5; $i++)
-							@if ($i < (\App\Feedback::where('job_id',$closeJob->job_id)->first()->skills + \App\Feedback::where('job_id',$closeJob->job_id)->first()->quality) / 2)
+							@if ($i < floor((\App\Feedback::where('job_id',$closeJob->job_id)->first()->skills + \App\Feedback::where('job_id',$closeJob->job_id)->first()->quality) / 2))
 								<i class="fa fa-star"></i> 
+							@elseif ($i < round((\App\Feedback::where('job_id',$closeJob->job_id)->first()->skills + \App\Feedback::where('job_id',$closeJob->job_id)->first()->quality) / 2))
+								<i class="fa fa-star-half-o"></i> 
 							@else
 								<i class="fa fa-star-o"></i>
 								@endif

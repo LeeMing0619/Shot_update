@@ -7,6 +7,7 @@
 .package_nam {font-size: 20px; font-weight: 600;}
 .package_media {max-width: 300px; height: 250px; background-color:rgba(189, 195, 199,1.0); border-radius: 3px; margin: 0 15px 0 0; position: relative;}
 .package_price{position: absolute; top: 0; right:0; background: red; padding: 5px 15px; background: rgba(47, 54, 64,0.5); color: #fff; font-weight: 600;}
+.pac-container {z-index: 1051 !important;}
 </style>
 @endsection
 @section('content')
@@ -25,7 +26,9 @@
         <div class="form-row list_pck">
           <div class="form-group col-md-4">
             <h3 style="color: #555; font-weight: 600;">{{$package->currency}}{{$package->price}}/hr</h3>
-            <!-- <a href="javascript:void(0);" data-toggle="modal" data-target="#requestService"  class="btn btn-dark" style="padding: 15px 20px; font-size: 17px; margin: 10px 0 0 0;">Request Service</a> -->
+            @if (Auth::user()->account_type == "client")
+            <a href="javascript:void(0);" data-toggle="modal" data-target="#requestService"  class="btn btn-dark" style="padding: 15px 20px; font-size: 17px; margin: 10px 0 0 0;">Request Service</a>
+            @endif
           </div>
         </div>
       </div>
@@ -93,10 +96,10 @@
         </button>
       </div>
       <div class="modal-body">
-      <form class="form-horizontal" method="POST" id="newBookingForm" style="padding: 20px 0 0 0;" action="{{ route('new-booking.create')}}">
+      <form class="form-horizontal" method="POST" id="newBookingForm" style="padding: 20px 0 0 0;" action="{{ route('invitePro')}}">
           @csrf
-          @method("GET")
-          <input type="hidden" name="user_id" value="{{Auth::user()->id}}" id="user_id">
+          <input type="hidden" name="user_id" value="{{ $package->user_id }}" id="user_id">
+          <input type="hidden" name="user_price" value="{{ $package->price }}" id="user_id">
           <div class="form-group">
             <div class="panel panel-primary form-group">
               <label class="control-label" for="autocomplete">Location</label>
@@ -172,12 +175,13 @@
               </div>
             </div>
           </div>
-        </form>
+        
       </div>
       <div class="modal-footer">
         <button type="button" class="site-button" data-dismiss="modal">Cancel</button>
-        <button type="button" class="site-button">Send Offer</button>
+        <button type="submit" class="site-button">Send Offer</button>
       </div>
+      </form>
     </div>
   </div>
 </div>

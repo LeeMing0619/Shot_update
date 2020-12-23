@@ -135,7 +135,95 @@ class HomeController extends Controller
       }
     }
 
-    public function checkOffers(Request $request) {
+    public function proProfile($id) 
+    {
+      if (Auth::User()) {
+        $profile      = NewPhoto::where([['user_id', $id], ['category', 'Professisonal']])->first();
+        $profileImage ='';
+        if($profile)
+          $profileImage = $profile->picture;
+
+        $pro_gallery      = NewPhoto::where([['user_id', $id], ['category', '!=', 'Professisonal']])->latest()->get();
+        $main_categories  = MainCategories::all();
+        $data             = ProPackage::where('user_id', $id)->latest()->paginate(15);
+        
+        return view('client.find-pro')->with([
+          'profile'         => $profileImage,
+          'pro_gallery'     => $pro_gallery,
+          'packages'        => $data,
+          'user_id'         => $id,
+          'user_categories' => $data,
+        ]);
+      } else {
+        return redirect('/');
+      }
+    }
+
+    public function invitePro(Request $request) 
+    {
+      if (Auth::User()) {
+        $post_data = [
+          'user_id' => Auth::user()->id,
+          'pro_type' => 'Photographer',
+          'looking_to_shoot' => 'Portrait',
+          'event_address' => $request->event_address,
+          'street_number' => $request->street_number,
+          'route' => $request->route,
+          'locality' => $request->locality,
+          'area' => $request->area,
+          'postal_code' => $request->postal_code,
+          'country' => $request->country,
+          'address_details' => $request->address_details,
+          'duration_' => $request->duration_,
+          'hours_' => $request->hours_,
+          'event_date' => $request->event_date,
+          'start_time' => $request->start_time,
+          'time_zone' =>$request->time_zone,
+          'done_hiring' => 1,
+        ];
+
+        $new_booking = NewBooking::create($post_data);
+
+        $pro_email = User::where('id', $request->user_id)->first()->email;
+
+        NewHire::create([
+          'client_id'    => Auth::user()->id,
+          'client_email' => Auth::user()->email,
+          'job_id'       => $new_booking->id,
+          'pro_id'       => $request->user_id,
+          'pro_email'    => $pro_email,
+          'hire_status'  => 1,
+        ]);
+
+        AcceptedJob::create([
+          'client_id'     => Auth::user()->id,
+          'client_email'  => Auth::user()->email,
+          'pro_id'        => $request->user_id,
+          'job_id'        => $new_booking->id,
+          'job_price'     => $request->user_price * $request->duration_,
+          'job_hours'     => $request->duration_,
+          'pro_email'     => $pro_email,
+          'hire_status'   => 1,
+        ]);
+
+        $details = [
+          'subject'  => 'Hello',
+          'email'    => $pro_email,
+          'content'  => 'You just hired and invited a job. Thanks for using SeempleShots.com'
+        ];
+        Mail::send('mail', $details, function($message) use ($details) {
+            $message->to($details['email'], '')->subject('Invitation from Client');
+            $message->from('vendorforest1@gmail.com', 'SeempleShot');
+        });
+
+        return back();
+      } else {
+        return redirect('/');
+      }
+    }
+
+    public function checkOffers(Request $request) 
+    {
       if (Auth::User()){
         if(Auth::user()->account_type == 'professional')
         {
@@ -260,6 +348,7 @@ class HomeController extends Controller
                   $message->from('vendorforest1@gmail.com', 'SeempleShot');
               });
 
+              NewBooking::where('id', $job_id)->update(['done_hiring'  => 2]);
               AcceptedJob::where([['pro_id', Auth::user()->id], ['job_id', $job_id]])->update(['hire_status'  => 2]);
               return NewHire::where([['pro_id', Auth::user()->id], ['job_id', $job_id]])->update(['hire_status'  => 2]);
             }
