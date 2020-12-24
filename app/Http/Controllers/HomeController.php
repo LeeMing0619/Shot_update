@@ -35,6 +35,15 @@ class HomeController extends Controller
      */
     public function index(Request $request)
     {        
+      // $basic  = new \Nexmo\Client\Credentials\Basic('158fb229', 'PNpSx47AGbtIwXoD');
+      // $client = new \Nexmo\Client($basic);
+
+      // $message = $client->message()->send([
+      //     'to' => '8613022434420',
+      //     'from' => '8613022434405',
+      //     'text' => 'Hello, You just hired $15k.'
+      // ]);
+        
         if (Auth::User()) {
           $profile      = NewPhoto::where([['user_id', Auth::User()->id], ['category', 'Professisonal']])->first();
           $profileImage ='';
